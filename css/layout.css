@@ -1,0 +1,143 @@
+/* ============================================
+   Базовая вёрстка и общие компоненты
+   ============================================ */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg-page);
+  color: var(--text-main);
+  transition: background 0.3s, color 0.3s;
+}
+
+/* Кнопка переключения темы — правый верхний угол */
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  background: var(--bg-theme-btn);
+  color: var(--color-theme-btn);
+  box-shadow: 0 4px 14px var(--shadow-theme-btn);
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s, color 0.3s, transform 0.2s;
+}
+
+.theme-toggle:hover {
+  transform: scale(1.08);
+}
+
+.theme-toggle:active {
+  transform: scale(0.95);
+}
+
+/* Шапка сайта */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg-header);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border-header);
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.header-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--color-heading);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.site-nav {
+  display: flex;
+  gap: 24px;
+}
+
+.site-nav a {
+  color: var(--text-main);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.site-nav a:hover {
+  color: var(--color-accent);
+}
+
+/* Общие кнопки */
+button {
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 16px;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+.btn-primary {
+  display: inline-block;
+  background: #1f3c88;
+  color: white;
+  text-decoration: none;
+  border-radius: 10px;
+  padding: 14px 28px;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.btn-primary:hover {
+  background: #152b63;
+  transform: translateY(-2px);
+}
+
+/* Подвал */
+.site-footer {
+  text-align: center;
+  padding: 30px 20px;
+  color: var(--color-footer);
+  font-size: 14px;
+  border-top: 1px solid var(--border-header);
+  margin-top: 40px;
+  transition: color 0.3s, border-color 0.3s;
+}
+
+@media (max-width: 600px) {
+  .site-nav {
+    gap: 14px;
+    font-size: 14px;
+  }
+
+  .header-inner {
+    padding-right: 70px;
+  }
+}

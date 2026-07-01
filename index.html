@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Бесплатный калькулятор семейного бюджета: расчёт доходов, расходов, остатка и накоплений в рублях." />
+  <title>Семейный бюджет — калькулятор и планирование финансов</title>
+
+  <!-- Стили проекта -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/landing.css" />
+  <link rel="stylesheet" href="css/calculator.css" />
+</head>
+
+<body>
+  <!-- Кнопка переключения темы -->
+  <button
+    class="theme-toggle"
+    id="themeToggle"
+    type="button"
+    onclick="toggleTheme()"
+    title="Переключить тему"
+    aria-label="Переключить светлую и тёмную тему"
+  >🌙</button>
+
+  <!-- Шапка сайта с навигацией -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="logo" href="#">💰 Семейный бюджет</a>
+      <nav class="site-nav" aria-label="Основная навигация">
+        <a href="#about">О сервисе</a>
+        <a href="#how">Как работает</a>
+        <a href="#calculator">Калькулятор</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Приветственный лендинг -->
+    <section class="hero" id="about">
+      <div class="hero-inner">
+        <span class="hero-badge">Бесплатно · Без регистрации · В браузере</span>
+        <h1>Управляйте семейным бюджетом просто и наглядно</h1>
+        <p>
+          Введите доходы и расходы — калькулятор покажет остаток, долю трат
+          и даст рекомендации по накоплениям. Все данные остаются только у вас.
+        </p>
+        <div class="hero-actions">
+          <a class="btn-hero" href="#calculator">Открыть калькулятор</a>
+          <a class="btn-hero-outline" href="#how">Узнать больше</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Блок преимуществ -->
+    <section class="features">
+      <h2 class="section-title">Почему это удобно</h2>
+      <p class="section-subtitle">Всё необходимое для быстрой оценки финансов семьи</p>
+
+      <div class="features-grid">
+        <article class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3>Наглядная аналитика</h3>
+          <p>Итоги, прогресс-бар и таблица расходов по категориям — сразу видно, куда уходят деньги.</p>
+        </article>
+
+        <article class="feature-card">
+          <div class="feature-icon">🔒</div>
+          <h3>Приватность</h3>
+          <p>Калькулятор работает полностью в браузере. Никаких серверов и передачи данных.</p>
+        </article>
+
+        <article class="feature-card">
+          <div class="feature-icon">🌙</div>
+          <h3>Светлая и тёмная тема</h3>
+          <p>Переключайте оформление одной кнопкой — выбор сохраняется между визитами.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Как это работает -->
+    <section class="how-it-works" id="how">
+      <div class="how-inner">
+        <h2 class="section-title">Как это работает</h2>
+        <p class="section-subtitle">Три простых шага к пониманию бюджета</p>
+
+        <div class="steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <h3>Введите доходы</h3>
+            <p>Зарплаты, подработка и прочие поступления за месяц.</p>
+          </div>
+
+          <div class="step">
+            <div class="step-number">2</div>
+            <h3>Укажите расходы</h3>
+            <p>Жильё, продукты, кредиты и другие статьи бюджета.</p>
+          </div>
+
+          <div class="step">
+            <div class="step-number">3</div>
+            <h3>Получите анализ</h3>
+            <p>Остаток, рекомендуемые накопления и советы по оптимизации.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Калькулятор семейного бюджета -->
+    <section class="calculator-section" id="calculator">
+      <div class="calculator-card">
+        <h2>Калькулятор семейного бюджета</h2>
+        <p class="subtitle">Расчёт доходов, расходов, остатка и накоплений в рублях</p>
+
+        <div class="grid">
+          <!-- Блок ввода доходов -->
+          <div class="card">
+            <h3>Доходы семьи</h3>
+
+            <div class="form-group">
+              <label for="salary1">Зарплата 1, ₽</label>
+              <input type="number" id="salary1" placeholder="Например: 80000">
+            </div>
+
+            <div class="form-group">
+              <label for="salary2">Зарплата 2, ₽</label>
+              <input type="number" id="salary2" placeholder="Например: 60000">
+            </div>
+
+            <div class="form-group">
+              <label for="extraIncome">Подработка, ₽</label>
+              <input type="number" id="extraIncome" placeholder="Например: 15000">
+            </div>
+
+            <div class="form-group">
+              <label for="otherIncome">Прочие доходы, ₽</label>
+              <input type="number" id="otherIncome" placeholder="Например: 5000">
+            </div>
+          </div>
+
+          <!-- Блок ввода расходов -->
+          <div class="card">
+            <h3>Расходы семьи</h3>
+
+            <div class="form-group">
+              <label for="housing">Жильё / ипотека / аренда, ₽</label>
+              <input type="number" id="housing" placeholder="Например: 40000">
+            </div>
+
+            <div class="form-group">
+              <label for="food">Продукты, ₽</label>
+              <input type="number" id="food" placeholder="Например: 35000">
+            </div>
+
+            <div class="form-group">
+              <label for="utilities">Коммунальные услуги, ₽</label>
+              <input type="number" id="utilities" placeholder="Например: 8000">
+            </div>
+
+            <div class="form-group">
+              <label for="transport">Транспорт, ₽</label>
+              <input type="number" id="transport" placeholder="Например: 12000">
+            </div>
+
+            <div class="form-group">
+              <label for="internet">Связь и интернет, ₽</label>
+              <input type="number" id="internet" placeholder="Например: 3000">
+            </div>
+
+            <div class="form-group">
+              <label for="loans">Кредиты, ₽</label>
+              <input type="number" id="loans" placeholder="Например: 15000">
+            </div>
+
+            <div class="form-group">
+              <label for="education">Образование, ₽</label>
+              <input type="number" id="education" placeholder="Например: 10000">
+            </div>
+
+            <div class="form-group">
+              <label for="health">Здоровье, ₽</label>
+              <input type="number" id="health" placeholder="Например: 7000">
+            </div>
+
+            <div class="form-group">
+              <label for="entertainment">Развлечения, ₽</label>
+              <input type="number" id="entertainment" placeholder="Например: 10000">
+            </div>
+
+            <div class="form-group">
+              <label for="otherExpenses">Прочие расходы, ₽</label>
+              <input type="number" id="otherExpenses" placeholder="Например: 5000">
+            </div>
+          </div>
+        </div>
+
+        <!-- Кнопки управления -->
+        <button class="btn-main" type="button" onclick="calculateBudget()">Рассчитать бюджет</button>
+        <button class="btn-reset" type="button" onclick="resetCalculator()">Очистить данные</button>
+
+        <!-- Итоговые показатели -->
+        <div class="results">
+          <div class="result-box income-box">
+            <h4>Общий доход</h4>
+            <p id="totalIncome">0 ₽</p>
+          </div>
+
+          <div class="result-box expense-box">
+            <h4>Общие расходы</h4>
+            <p id="totalExpenses">0 ₽</p>
+          </div>
+
+          <div class="result-box balance-box">
+            <h4>Остаток</h4>
+            <p id="balance">0 ₽</p>
+          </div>
+
+          <div class="result-box saving-box">
+            <h4>Рекомендуемые накопления</h4>
+            <p id="recommendedSavings">0 ₽</p>
+          </div>
+        </div>
+
+        <!-- Прогресс-бар -->
+        <div class="progress-wrapper">
+          <div class="progress-title">Доля расходов от дохода</div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="expenseProgress">0%</div>
+          </div>
+        </div>
+
+        <!-- Текстовый анализ -->
+        <div class="analysis" id="analysis">
+          Введите доходы и расходы, затем нажмите кнопку «Рассчитать бюджет».
+        </div>
+
+        <!-- Таблица расходов -->
+        <div class="table-section">
+          <h3>Подробная таблица расходов</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Категория</th>
+                <th>Сумма</th>
+                <th>Доля от расходов</th>
+              </tr>
+            </thead>
+            <tbody id="expenseTable">
+              <tr>
+                <td colspan="3">Данные появятся после расчёта</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="calculator-note">
+          Калькулятор работает полностью в браузере. Данные никуда не отправляются.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Подвал -->
+  <footer class="site-footer">
+    <p>Семейный бюджет · Калькулятор для планирования финансов семьи</p>
+  </footer>
+
+  <!-- Скрипты -->
+  <script src="js/theme.js"></script>
+  <script src="js/calculator.js"></script>
+</body>
+</html>
