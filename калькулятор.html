@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Калькулятор семейного бюджета</title>
+
+  <style>
+    /* ============================================
+       CSS-переменные для светлой и тёмной темы
+       ============================================ */
+    :root {
+      --bg-page: #f3f6fb;
+      --text-main: #222;
+      --bg-container: #ffffff;
+      --shadow-container: rgba(0, 0, 0, 0.08);
+      --color-heading: #1f3c88;
+      --color-subtitle: #666;
+      --bg-card: #f9fbff;
+      --border-card: #e2e8f0;
+      --color-h2: #263159;
+      --color-label: #333;
+      --bg-input: #ffffff;
+      --border-input: #cbd5e1;
+      --color-input-text: #222;
+      --focus-border: #1f3c88;
+      --focus-shadow: rgba(31, 60, 136, 0.15);
+      --bg-analysis: #eef2ff;
+      --border-analysis: #1f3c88;
+      --bg-progress: #e5e7eb;
+      --border-table: #e5e7eb;
+      --bg-table-head: #1f3c88;
+      --bg-table-row-even: #f8fafc;
+      --color-footer: #777;
+      --bg-theme-btn: #ffffff;
+      --color-theme-btn: #1f3c88;
+      --shadow-theme-btn: rgba(0, 0, 0, 0.12);
+    }
+
+    /* Тёмная тема — переопределяем переменные */
+    [data-theme="dark"] {
+      --bg-page: #0f172a;
+      --text-main: #e2e8f0;
+      --bg-container: #1e293b;
+      --shadow-container: rgba(0, 0, 0, 0.35);
+      --color-heading: #93c5fd;
+      --color-subtitle: #94a3b8;
+      --bg-card: #334155;
+      --border-card: #475569;
+      --color-h2: #e2e8f0;
+      --color-label: #cbd5e1;
+      --bg-input: #1e293b;
+      --border-input: #64748b;
+      --color-input-text: #f1f5f9;
+      --focus-border: #60a5fa;
+      --focus-shadow: rgba(96, 165, 250, 0.25);
+      --bg-analysis: #1e3a5f;
+      --border-analysis: #60a5fa;
+      --bg-progress: #475569;
+      --border-table: #475569;
+      --bg-table-head: #1e40af;
+      --bg-table-row-even: #2d3f56;
+      --color-footer: #94a3b8;
+      --bg-theme-btn: #334155;
+      --color-theme-btn: #fbbf24;
+      --shadow-theme-btn: rgba(0, 0, 0, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: var(--bg-page);
+      color: var(--text-main);
+      padding: 20px;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* Кнопка переключения темы — фиксирована в правом верхнем углу */
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      background: var(--bg-theme-btn);
+      color: var(--color-theme-btn);
+      box-shadow: 0 4px 14px var(--shadow-theme-btn);
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s, color 0.3s, transform 0.2s;
+    }
+
+    .theme-toggle:hover {
+      transform: scale(1.08);
+    }
+
+    .theme-toggle:active {
+      transform: scale(0.95);
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: var(--bg-container);
+      border-radius: 18px;
+      padding: 25px;
+      box-shadow: 0 10px 30px var(--shadow-container);
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+      color: var(--color-heading);
+      transition: color 0.3s;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--color-subtitle);
+      margin-bottom: 25px;
+      transition: color 0.3s;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 25px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border-radius: 14px;
+      padding: 20px;
+      border: 1px solid var(--border-card);
+      transition: background 0.3s, border-color 0.3s;
+    }
+
+    h2 {
+      margin-bottom: 15px;
+      color: var(--color-h2);
+      font-size: 22px;
+      transition: color 0.3s;
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+      color: var(--color-label);
+      transition: color 0.3s;
+    }
+
+    input {
+      width: 100%;
+      padding: 11px;
+      border-radius: 10px;
+      border: 1px solid var(--border-input);
+      background: var(--bg-input);
+      color: var(--color-input-text);
+      font-size: 16px;
+      transition: background 0.3s, border-color 0.3s, color 0.3s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--focus-border);
+      box-shadow: 0 0 0 2px var(--focus-shadow);
+    }
+
+    button {
+      border: none;
+      cursor: pointer;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 16px;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+
+    .btn-main {
+      width: 100%;
+      background: #1f3c88;
+      color: white;
+      margin-top: 15px;
+    }
+
+    .btn-main:hover {
+      background: #152b63;
+    }
+
+    .btn-reset {
+      width: 100%;
+      background: #dc2626;
+      color: white;
+      margin-top: 10px;
+    }
+
+    .btn-reset:hover {
+      background: #991b1b;
+    }
+
+    .results {
+      margin-top: 25px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+    }
+
+    .result-box {
+      padding: 18px;
+      border-radius: 14px;
+      color: white;
+      text-align: center;
+    }
+
+    .income-box {
+      background: #16a34a;
+    }
+
+    .expense-box {
+      background: #dc2626;
+    }
+
+    .balance-box {
+      background: #2563eb;
+    }
+
+    .saving-box {
+      background: #9333ea;
+    }
+
+    .result-box h3 {
+      font-size: 15px;
+      margin-bottom: 8px;
+      font-weight: normal;
+    }
+
+    .result-box p {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .analysis {
+      margin-top: 25px;
+      padding: 20px;
+      border-radius: 14px;
+      background: var(--bg-analysis);
+      border-left: 6px solid var(--border-analysis);
+      line-height: 1.6;
+      transition: background 0.3s, border-color 0.3s;
+    }
+
+    .progress-wrapper {
+      margin-top: 25px;
+    }
+
+    .progress-title {
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 28px;
+      background: var(--bg-progress);
+      border-radius: 20px;
+      overflow: hidden;
+      transition: background 0.3s;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: #16a34a;
+      color: white;
+      text-align: center;
+      line-height: 28px;
+      font-size: 14px;
+      transition: 0.4s;
+    }
+
+    .table-section {
+      margin-top: 30px;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+    }
+
+    th, td {
+      border: 1px solid var(--border-table);
+      padding: 12px;
+      text-align: left;
+      transition: background 0.3s, border-color 0.3s;
+    }
+
+    th {
+      background: var(--bg-table-head);
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background: var(--bg-table-row-even);
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 25px;
+      color: var(--color-footer);
+      font-size: 14px;
+      transition: color 0.3s;
+    }
+
+    @media (max-width: 900px) {
+      .grid,
+      .results {
+        grid-template-columns: 1fr;
+      }
+
+      .container {
+        padding: 18px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Кнопка переключения темы: солнце = сейчас тёмная, луна = сейчас светлая -->
+  <button
+    class="theme-toggle"
+    id="themeToggle"
+    type="button"
+    onclick="toggleTheme()"
+    title="Переключить тему"
+    aria-label="Переключить светлую и тёмную тему"
+  >🌙</button>
+
+  <div class="container">
+    <!-- Заголовок страницы -->
+    <h1>Калькулятор семейного бюджета</h1>
+    <p class="subtitle">Расчёт доходов, расходов, остатка и накоплений в рублях</p>
+
+    <div class="grid">
+      <!-- Блок ввода доходов -->
+      <div class="card">
+        <h2>Доходы семьи</h2>
+
+        <div class="form-group">
+          <label>Зарплата 1, ₽</label>
+          <input type="number" id="salary1" placeholder="Например: 80000">
+        </div>
+
+        <div class="form-group">
+          <label>Зарплата 2, ₽</label>
+          <input type="number" id="salary2" placeholder="Например: 60000">
+        </div>
+
+        <div class="form-group">
+          <label>Подработка, ₽</label>
+          <input type="number" id="extraIncome" placeholder="Например: 15000">
+        </div>
+
+        <div class="form-group">
+          <label>Прочие доходы, ₽</label>
+          <input type="number" id="otherIncome" placeholder="Например: 5000">
+        </div>
+      </div>
+
+      <!-- Блок ввода расходов -->
+      <div class="card">
+        <h2>Расходы семьи</h2>
+
+        <div class="form-group">
+          <label>Жильё / ипотека / аренда, ₽</label>
+          <input type="number" id="housing" placeholder="Например: 40000">
+        </div>
+
+        <div class="form-group">
+          <label>Продукты, ₽</label>
+          <input type="number" id="food" placeholder="Например: 35000">
+        </div>
+
+        <div class="form-group">
+          <label>Коммунальные услуги, ₽</label>
+          <input type="number" id="utilities" placeholder="Например: 8000">
+        </div>
+
+        <div class="form-group">
+          <label>Транспорт, ₽</label>
+          <input type="number" id="transport" placeholder="Например: 12000">
+        </div>
+
+        <div class="form-group">
+          <label>Связь и интернет, ₽</label>
+          <input type="number" id="internet" placeholder="Например: 3000">
+        </div>
+
+        <div class="form-group">
+          <label>Кредиты, ₽</label>
+          <input type="number" id="loans" placeholder="Например: 15000">
+        </div>
+
+        <div class="form-group">
+          <label>Образование, ₽</label>
+          <input type="number" id="education" placeholder="Например: 10000">
+        </div>
+
+        <div class="form-group">
+          <label>Здоровье, ₽</label>
+          <input type="number" id="health" placeholder="Например: 7000">
+        </div>
+
+        <div class="form-group">
+          <label>Развлечения, ₽</label>
+          <input type="number" id="entertainment" placeholder="Например: 10000">
+        </div>
+
+        <div class="form-group">
+          <label>Прочие расходы, ₽</label>
+          <input type="number" id="otherExpenses" placeholder="Например: 5000">
+        </div>
+      </div>
+    </div>
+
+    <!-- Кнопки управления расчётом -->
+    <button class="btn-main" onclick="calculateBudget()">Рассчитать бюджет</button>
+    <button class="btn-reset" onclick="resetCalculator()">Очистить данные</button>
+
+    <!-- Итоговые показатели бюджета -->
+    <div class="results">
+      <div class="result-box income-box">
+        <h3>Общий доход</h3>
+        <p id="totalIncome">0 ₽</p>
+      </div>
+
+      <div class="result-box expense-box">
+        <h3>Общие расходы</h3>
+        <p id="totalExpenses">0 ₽</p>
+      </div>
+
+      <div class="result-box balance-box">
+        <h3>Остаток</h3>
+        <p id="balance">0 ₽</p>
+      </div>
+
+      <div class="result-box saving-box">
+        <h3>Рекомендуемые накопления</h3>
+        <p id="recommendedSavings">0 ₽</p>
+      </div>
+    </div>
+
+    <!-- Прогресс-бар: доля расходов от дохода -->
+    <div class="progress-wrapper">
+      <div class="progress-title">Доля расходов от дохода</div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="expenseProgress">0%</div>
+      </div>
+    </div>
+
+    <!-- Текстовый анализ бюджета -->
+    <div class="analysis" id="analysis">
+      Введите доходы и расходы, затем нажмите кнопку «Рассчитать бюджет».
+    </div>
+
+    <!-- Таблица с разбивкой расходов по категориям -->
+    <div class="table-section">
+      <h2>Подробная таблица расходов</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Категория</th>
+            <th>Сумма</th>
+            <th>Доля от расходов</th>
+          </tr>
+        </thead>
+        <tbody id="expenseTable">
+          <tr>
+            <td colspan="3">Данные появятся после расчёта</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="footer">
+      Калькулятор работает полностью в браузере. Данные никуда не отправляются.
+    </div>
+  </div>
+
+  <script>
+    /* ============================================
+       Переключение светлой / тёмной темы
+       ============================================ */
+
+    // Ключ для сохранения выбора темы в браузере
+    const THEME_STORAGE_KEY = "budget-calculator-theme";
+
+    // Применяем тему к <html> и обновляем иконку кнопки
+    function applyTheme(theme) {
+      document.documentElement.setAttribute("data-theme", theme);
+
+      const toggleBtn = document.getElementById("themeToggle");
+      // В светлой теме показываем луну (переключить на тёмную)
+      // В тёмной теме показываем солнце (переключить на светлую)
+      toggleBtn.textContent = theme === "dark" ? "☀️" : "🌙";
+      toggleBtn.title = theme === "dark" ? "Включить светлую тему" : "Включить тёмную тему";
+    }
+
+    // Переключение темы по клику на кнопку
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute("data-theme") || "light";
+      const next = current === "dark" ? "light" : "dark";
+
+      applyTheme(next);
+      localStorage.setItem(THEME_STORAGE_KEY, next);
+    }
+
+    // Загружаем сохранённую тему при открытии страницы
+    (function initTheme() {
+      const saved = localStorage.getItem(THEME_STORAGE_KEY);
+
+      // Если пользователь уже выбирал тему — используем её
+      if (saved === "dark" || saved === "light") {
+        applyTheme(saved);
+        return;
+      }
+
+      // Иначе подстраиваемся под системные настройки ОС
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      applyTheme(prefersDark ? "dark" : "light");
+    })();
+
+    /* ============================================
+       Логика калькулятора бюджета
+       ============================================ */
+
+    function getValue(id) {
+      return Number(document.getElementById(id).value) || 0;
+    }
+
+    function formatRubles(amount) {
+      return amount.toLocaleString("ru-RU") + " ₽";
+    }
+
+    function calculateBudget() {
+      const incomes = {
+        salary1: getValue("salary1"),
+        salary2: getValue("salary2"),
+        extraIncome: getValue("extraIncome"),
+        otherIncome: getValue("otherIncome")
+      };
+
+      const expenses = {
+        "Жильё / ипотека / аренда": getValue("housing"),
+        "Продукты": getValue("food"),
+        "Коммунальные услуги": getValue("utilities"),
+        "Транспорт": getValue("transport"),
+        "Связь и интернет": getValue("internet"),
+        "Кредиты": getValue("loans"),
+        "Образование": getValue("education"),
+        "Здоровье": getValue("health"),
+        "Развлечения": getValue("entertainment"),
+        "Прочие расходы": getValue("otherExpenses")
+      };
+
+      const totalIncome =
+        incomes.salary1 +
+        incomes.salary2 +
+        incomes.extraIncome +
+        incomes.otherIncome;
+
+      let totalExpenses = 0;
+
+      for (let category in expenses) {
+        totalExpenses += expenses[category];
+      }
+
+      const balance = totalIncome - totalExpenses;
+      const recommendedSavings = totalIncome * 0.1;
+      const expensePercent = totalIncome > 0 ? (totalExpenses / totalIncome) * 100 : 0;
+
+      document.getElementById("totalIncome").textContent = formatRubles(totalIncome);
+      document.getElementById("totalExpenses").textContent = formatRubles(totalExpenses);
+      document.getElementById("balance").textContent = formatRubles(balance);
+      document.getElementById("recommendedSavings").textContent = formatRubles(recommendedSavings);
+
+      const progress = document.getElementById("expenseProgress");
+      const roundedPercent = Math.min(expensePercent, 100).toFixed(0);
+
+      progress.style.width = roundedPercent + "%";
+      progress.textContent = expensePercent.toFixed(1) + "%";
+
+      if (expensePercent <= 50) {
+        progress.style.background = "#16a34a";
+      } else if (expensePercent <= 80) {
+        progress.style.background = "#f59e0b";
+      } else {
+        progress.style.background = "#dc2626";
+      }
+
+      createExpenseTable(expenses, totalExpenses);
+      createAnalysis(totalIncome, totalExpenses, balance, recommendedSavings, expensePercent);
+    }
+
+    function createExpenseTable(expenses, totalExpenses) {
+      const table = document.getElementById("expenseTable");
+      table.innerHTML = "";
+
+      for (let category in expenses) {
+        const amount = expenses[category];
+
+        if (amount > 0) {
+          const percent = totalExpenses > 0 ? (amount / totalExpenses) * 100 : 0;
+
+          const row = `
+            <tr>
+              <td>${category}</td>
+              <td>${formatRubles(amount)}</td>
+              <td>${percent.toFixed(1)}%</td>
+            </tr>
+          `;
+
+          table.innerHTML += row;
+        }
+      }
+
+      if (table.innerHTML === "") {
+        table.innerHTML = `
+          <tr>
+            <td colspan="3">Расходы не указаны</td>
+          </tr>
+        `;
+      }
+    }
+
+    function createAnalysis(totalIncome, totalExpenses, balance, recommendedSavings, expensePercent) {
+      const analysis = document.getElementById("analysis");
+
+      let text = "";
+
+      if (totalIncome <= 0) {
+        text = "Укажите хотя бы один источник дохода, чтобы получить анализ бюджета.";
+      } else if (balance > 0) {
+        text = `
+          Ваш семейный бюджет в плюсе. После всех расходов остаётся 
+          <strong>${formatRubles(balance)}</strong>. 
+          Рекомендуется откладывать минимум 10% дохода — 
+          <strong>${formatRubles(recommendedSavings)}</strong> в месяц.
+        `;
+
+        if (expensePercent <= 50) {
+          text += " У вас хороший уровень расходов: семья тратит меньше половины дохода.";
+        } else if (expensePercent <= 80) {
+          text += " Расходы находятся на среднем уровне. Желательно следить за необязательными тратами.";
+        } else {
+          text += " Расходы занимают слишком большую часть дохода. Лучше пересмотреть крупные статьи бюджета.";
+        }
+      } else if (balance === 0) {
+        text = `
+          Ваш бюджет полностью сбалансирован: доходы равны расходам. 
+          Но накоплений не остаётся. Желательно сократить часть расходов или увеличить доход.
+        `;
+      } else {
+        text = `
+          Ваш бюджет в минусе на <strong>${formatRubles(Math.abs(balance))}</strong>. 
+          Расходы превышают доходы. Рекомендуется срочно пересмотреть траты, особенно кредиты, развлечения и прочие расходы.
+        `;
+      }
+
+      analysis.innerHTML = text;
+    }
+
+    function resetCalculator() {
+      const inputs = document.querySelectorAll("input");
+
+      inputs.forEach(input => {
+        input.value = "";
+      });
+
+      document.getElementById("totalIncome").textContent = "0 ₽";
+      document.getElementById("totalExpenses").textContent = "0 ₽";
+      document.getElementById("balance").textContent = "0 ₽";
+      document.getElementById("recommendedSavings").textContent = "0 ₽";
+
+      const progress = document.getElementById("expenseProgress");
+      progress.style.width = "0%";
+      progress.textContent = "0%";
+
+      document.getElementById("analysis").textContent =
+        "Введите доходы и расходы, затем нажмите кнопку «Рассчитать бюджет».";
+
+      document.getElementById("expenseTable").innerHTML = `
+        <tr>
+          <td colspan="3">Данные появятся после расчёта</td>
+        </tr>
+      `;
+    }
+  </script>
+</body>
+</html>
